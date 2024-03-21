@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "orders")
@@ -40,7 +41,7 @@ public class Order {
     private String note;
 
     @Column(name="order_date")
-    private LocalDate orderDate;
+    private Date orderDate;
 
     @Column(name = "status")
     private String status;
