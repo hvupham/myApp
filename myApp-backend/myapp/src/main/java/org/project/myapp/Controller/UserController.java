@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.myapp.Services.IUserService;
 import org.project.myapp.dtos.UserDTO;
 import org.project.myapp.dtos.UserLoginDTO;
+import org.project.myapp.models.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -36,8 +37,8 @@ public class UserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Password does not match");
             }
-            userService.createUser(userDTO);
-            return ResponseEntity.ok("Register successfully");
+            User user = userService.createUser(userDTO);
+            return ResponseEntity.ok(user);
         }  catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -46,9 +47,14 @@ public class UserController {
     public ResponseEntity<String> login(
             @Valid @RequestBody UserLoginDTO userLoginDTO) {
         // Kiểm tra thông tin đăng nhập và sinh token
-        String token =userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+        try {
+            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+            return ResponseEntity.ok(token);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         // Trả về token trong response
-        return ResponseEntity.ok(token);
     }
 }
 
